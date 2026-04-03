@@ -17,7 +17,7 @@ os.makedirs(DATA_FOLDER, exist_ok=True)
 def scrape_quotes():
     print(f"Starting scrape from {URL}...")
 
-    response = requests.get(URL, headers=HEADERS)
+    response = requests.get(URL, headers=HEADERS, timeout=15)
     response.raise_for_status()  # Will raise error if site blocks
 
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -28,7 +28,7 @@ def scrape_quotes():
     for element in quote_elements:
         text = element.find('span', class_='text').get_text(strip=True)
         author = element.find('small', class_='author').get_text(strip=True)
-        tags = [tag.get_text() for tag in element.find_all('a', class_='tag')]
+        tags = [tag.get_text(strip=True) for tag in element.find_all('a', class_='tag')]
 
         quotes.append({
             'Quote': text,
